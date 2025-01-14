@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Network Scan</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="mt-5">Network Scan Results</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">IP Address</th>
+                        <th scope="col">MAC Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <td>{{ device.ip }}</td>
+                        <td>{{ device.mac }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
