@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <title>Network scan</title>
+</head>
+<body>
+    <div id="search-bar">
+        <form action="{% url 'index' %}" method="GET">
+            <input type="text" name="search" placeholder="Search...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div id="menu">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'applications' %}">Applications</a>
+        <div class="dropdown">
+            <a href="#">Administration</a>
+            <div class="dropdown-content">
+                <a href="{% url 'history' %}">Login history</a>
+                <a href="{% url 'nic_processes' %}">NIC processes</a>
+                <a href="{% url 'create_host' %}">Create host</a>
+                <a href="{% url 'list_hosts' %}">Host list</a>
+                <a href="{% url 'notifications' %}">Notifications</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="#">Utility</a>
+            <div class="dropdown-content">
+                <a href="{% url 'scan' %}">Network scan</a>
+            </div>
+        </div>
+        <a href="{% url 'contact' %}">Contact</a>
+    </div>
+    <div id="content">
+        <h1>Network scan</h1>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">IP Address</th>
+                    <th scope="col">MAC Address</th>
+                    <th scope="col">Vendor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                <tr>
+                    <td>{{ device.ip }}</td>
+                    <td>{{ device.mac }}</td>
+                    <td>{{ device.vendor }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
