@@ -1,0 +1,2 @@
+scapy # for the packet manipulation
+flask # for the web interface
