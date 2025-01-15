@@ -1,4 +1,3 @@
-# gui.py
 import tkinter as tk
 from tkinter import ttk, PhotoImage
 import threading
@@ -15,7 +14,7 @@ class CyberPulseApp:
 
         # Set title and window properties
         self.root.title("CyberPulse - Network Security Suite")
-        self.root.geometry("800x600")
+        self.root.geometry("1000x600")
         self.root.configure(bg="#1f2933")  # Set background color
 
         # Try setting an icon
@@ -36,44 +35,75 @@ class CyberPulseApp:
         scan_thread.start()
 
     def create_widgets(self):
-        # Notebook (Tabs)
-        notebook_style = ttk.Style()
-        notebook_style.configure(
-            "TNotebook",
-            background="#1f2933",
-            foreground="#ffffff",
-            padding=10,
-        )
-        notebook_style.configure("TNotebook.Tab", font=("Helvetica", 12), padding=[10, 5])
+        # Left Sidebar Frame with gradient effect
+        sidebar_frame = tk.Frame(self.root, width=220, bg="#1f2933")
+        sidebar_frame.pack(side="left", fill="y")
 
-        notebook = ttk.Notebook(self.root, style="TNotebook")
-        notebook.pack(expand=True, fill="both", padx=20, pady=20)
+        # Sidebar Buttons with hover effect
+        self.create_sidebar_buttons(sidebar_frame)
 
-        # Frames for tabs
-        scan_frame = ttk.Frame(notebook, style="TFrame")
-        osint_frame = ttk.Frame(notebook, style="TFrame")
-        remediation_frame = ttk.Frame(notebook, style="TFrame")
+        # Main Content Frame
+        self.content_frame = tk.Frame(self.root, bg="#2d3748", relief="solid", bd=1)
+        self.content_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
-        notebook.add(scan_frame, text="Scan Réseau")
-        notebook.add(osint_frame, text="OSINT / Recherche")
-        notebook.add(remediation_frame, text="Remediation")
+        # Default to scan tab
+        self.show_scan_tab()
+
+    def create_sidebar_buttons(self, sidebar_frame):
+        # Create sidebar buttons with hover effects
+        buttons = [
+            ("Scan Réseau", self.show_scan_tab),
+            ("OSINT / Recherche", self.show_osint_tab),
+            ("Remediation", self.show_remediation_tab)
+        ]
+
+        for text, command in buttons:
+            button = tk.Button(
+                sidebar_frame, text=text, command=command,
+                font=("Helvetica", 14), bg="#2d3748", fg="#ffffff",
+                relief="flat", width=20, anchor="w", padx=20, pady=15
+            )
+            button.pack(fill="x", pady=5)
+
+            # Hover effect
+            button.bind("<Enter>", lambda e, b=button: b.config(bg="#4A5568"))
+            button.bind("<Leave>", lambda e, b=button: b.config(bg="#2d3748"))
+
+    def show_scan_tab(self):
+        for widget in self.content_frame.winfo_children():
+            widget.destroy()
 
         # Scan Network Tab
+        scan_frame = ttk.Frame(self.content_frame, style="TFrame")
         self.build_scan_tab(scan_frame)
+        scan_frame.pack(fill="both", expand=True)
 
-        # Placeholder for other tabs
-        osint_label = ttk.Label(osint_frame, text="OSINT Features Coming Soon!", font=("Helvetica", 14), background="#1f2933", foreground="#ffffff")
+    def show_osint_tab(self):
+        for widget in self.content_frame.winfo_children():
+            widget.destroy()
+
+        # OSINT Tab
+        osint_frame = ttk.Frame(self.content_frame, style="TFrame")
+        osint_label = ttk.Label(osint_frame, text="OSINT Features Coming Soon!", font=("Helvetica", 16), background="#2d3748", foreground="#ffffff")
         osint_label.pack(expand=True, pady=20)
+        osint_frame.pack(fill="both", expand=True)
 
-        remediation_label = ttk.Label(remediation_frame, text="Remediation Features Coming Soon!", font=("Helvetica", 14), background="#1f2933", foreground="#ffffff")
+    def show_remediation_tab(self):
+        for widget in self.content_frame.winfo_children():
+            widget.destroy()
+
+        # Remediation Tab
+        remediation_frame = ttk.Frame(self.content_frame, style="TFrame")
+        remediation_label = ttk.Label(remediation_frame, text="Remediation Features Coming Soon!", font=("Helvetica", 16), background="#2d3748", foreground="#ffffff")
         remediation_label.pack(expand=True, pady=20)
+        remediation_frame.pack(fill="both", expand=True)
 
     def build_scan_tab(self, scan_frame):
         # Add styling
         style = ttk.Style()
-        style.configure("TFrame", background="#1f2933")
-        style.configure("TLabel", background="#1f2933", foreground="#ffffff", font=("Helvetica", 12))
-        style.configure("TButton", background="#374151", foreground="#ffffff", font=("Helvetica", 12), padding=5)
+        style.configure("TFrame", background="#2d3748")
+        style.configure("TLabel", background="#2d3748", foreground="#ffffff", font=("Helvetica", 14))
+        style.configure("TButton", background="#4A5568", foreground="#ffffff", font=("Helvetica", 14), padding=5)
 
         scan_frame.configure(style="TFrame")
 
@@ -81,16 +111,16 @@ class CyberPulseApp:
         scan_label = ttk.Label(scan_frame, text="Scan your Wi-Fi network for devices and vulnerabilities:", style="TLabel")
         scan_label.pack(anchor="w", padx=20, pady=(20, 10))
 
-        # Scan Button
+        # Scan Button with hover effect
         scan_button = ttk.Button(scan_frame, text="Start Scan", command=self.start_scan_thread, style="TButton")
         scan_button.pack(anchor="center", pady=10)
 
-        # Progress Bar
-        self.progress = ttk.Progressbar(scan_frame, orient="horizontal", mode="determinate", length=400)
+        # Progress Bar with improved color
+        self.progress = ttk.Progressbar(scan_frame, orient="horizontal", mode="determinate", length=400, style="TProgressbar")
         self.progress.pack(anchor="center", pady=10)
 
-        # Results Text Box
-        self.scan_results = tk.Text(scan_frame, wrap="word", height=15, bg="#e5e7eb", fg="#000000", font=("Consolas", 10), relief="flat", highlightthickness=1, highlightbackground="#4b5563")
+        # Scan Results Box
+        self.scan_results = tk.Text(scan_frame, wrap="word", height=15, bg="#f7fafc", fg="#333333", font=("Consolas", 12), relief="flat", highlightthickness=1, highlightbackground="#e2e8f0")
         self.scan_results.pack(padx=20, pady=10, fill="both", expand=True)
 
         # Export Section
@@ -147,3 +177,9 @@ class CyberPulseApp:
                         self.scan_results.insert(tk.END, f"No open ports found on {ip}.\n")
         else:
             self.scan_results.insert(tk.END, "No devices found.\n")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CyberPulseApp(root)
+    root.mainloop()
