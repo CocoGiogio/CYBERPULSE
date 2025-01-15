@@ -6,10 +6,10 @@ from src.cyber_sec.network_scanner import NetworkScanner
 from src.cyber_sec.port_scanner import PortScanner
 
 class CyberPulseApp:
-    def __init__(self, root):
+    def __init__(self, root): # Constructeur
         self.root = root
-        self.network_scanner = NetworkScanner()
-        self.port_scanner = PortScanner()
+        self.network_scanner = NetworkScanner() # Creation de l'objet NetworkScanner
+        self.port_scanner = PortScanner() # Creation de l'objet PortScanner
 
         self.root.title("CyberPulse")
         try:
@@ -33,7 +33,13 @@ class CyberPulseApp:
         notebook.pack(expand=True, fill="both")
 
         scan_frame = ttk.Frame(notebook)
+        osint_frame = ttk.Frame(notebook)
+        remerdiation_frame = ttk.Frame(notebook)
+        
+
         notebook.add(scan_frame, text="Scan Réseau")
+        notebook.add(osint_frame, text="OSINT / Recherche")
+        notebook.add(remerdiation_frame, text="Remediation")
 
         scan_label = ttk.Label(
             scan_frame,
