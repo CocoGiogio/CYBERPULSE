@@ -7,6 +7,14 @@
 
 ---
 
+## **Installation / Utilisation**
+```
+git clone https://github.com/CocoGiogio/CYBERPULSE.git
+cd CYBERPUSLE/
+pip3 install -r requirements.txt
+python3 main.py
+```
+
 ## **Fonctionnalités clés**
 
 ### **Cybersécurité**
@@ -35,6 +43,15 @@ Cyber Pulse s'adresse principalement aux entreprises suivantes :
 - **ITE** (Institutions et TPE Équivalentes)  
 
 ---
+
+## **Libraries Utilisées**
+Les librairies utilisées pour ce projet sont:
+- `scapy`
+- `tkinter`
+- `psutil`
+- `threading`
+- `ipaddress`
+- `socket`
 
 ## **Sponsors**
 Actuellement, nous n'avons pas de sponsor. Nous travaillons avec des ressources limitées, mais notre motivation est sans faille ! 🙁
