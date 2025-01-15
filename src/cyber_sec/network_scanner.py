@@ -3,7 +3,7 @@ import threading
 from scapy.all import ARP, Ether, srp
 import psutil
 import ipaddress
-from src.port_scanner import PortScanner
+from src.cyber_sec.port_scanner import PortScanner
 import socket
 
 class NetworkScanner:

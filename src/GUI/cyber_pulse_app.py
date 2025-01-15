@@ -2,8 +2,8 @@
 import tkinter as tk
 from tkinter import ttk, PhotoImage
 import threading
-from src.network_scanner import NetworkScanner
-from src.port_scanner import PortScanner
+from src.cyber_sec.network_scanner import NetworkScanner
+from src.cyber_sec.port_scanner import PortScanner
 
 class CyberPulseApp:
     def __init__(self, root):
