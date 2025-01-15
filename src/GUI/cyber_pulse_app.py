@@ -97,14 +97,8 @@ class CyberPulseApp:
         export_label = ttk.Label(scan_frame, text="Export Results:", style="TLabel")
         export_label.pack(anchor="w", padx=20, pady=(10, 5))
 
-        self.export_options = ttk.Combobox(scan_frame, values=["PDF"], state="readonly", font=("Helvetica", 12))
-        self.export_options.pack(anchor="w", padx=20, pady=5)
-        self.export_options.bind("<<ComboboxSelected>>", self.export_results)
-
-    def export_results(self, event):
-        option = self.export_options.get()
-        if option == "PDF":
-            self.export_to_pdf()
+        export_button = ttk.Button(scan_frame, text="Export to PDF", command=self.export_to_pdf, style="TButton")
+        export_button.pack(anchor="w", padx=20, pady=5)
 
     def export_to_pdf(self):
         pdf = FPDF()
