@@ -44,7 +44,7 @@ Cyber Pulse s'adresse principalement aux entreprises suivantes :
 
 ---
 
-## **Libraries Utilisées**
+## **Librairies Utilisées**
 Les librairies utilisées pour ce projet sont:
 - `scapy`
 - `tkinter`
