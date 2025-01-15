@@ -2,15 +2,16 @@
 import tkinter as tk
 from tkinter import ttk, PhotoImage
 import threading
-from cyber_sec.network_scanner import NetworkScanner
-from cyber_sec.port_scanner import PortScanner
-from fpdf import FPDF
+from src.network_scanner import NetworkScanner
+from src.port_scanner import PortScanner
 
 class CyberPulseApp:
-    def __init__(self, root): # Constructeur
+    def __init__(self, root):
         self.root = root
-        self.network_scanner = NetworkScanner() # Creation de l'objet NetworkScanner
-        self.port_scanner = PortScanner() # Creation de l'objet PortScanner
+        self.network_scanner = NetworkScanner()
+        self.port_scanner = PortScanner()
+        self.scan_thread = None
+        self.stop_scan_flag = threading.Event()
 
         self.root.title("CyberPulse")
         try:
@@ -23,23 +24,25 @@ class CyberPulseApp:
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def on_closing(self):
+        self.stop_scan()
         self.root.destroy()
 
     def start_scan_thread(self):
-        scan_thread = threading.Thread(target=self.scan_network)
-        scan_thread.start()
+        self.stop_scan_flag.clear()
+        self.scan_thread = threading.Thread(target=self.scan_network)
+        self.scan_thread.start()
+
+    def stop_scan(self):
+        self.stop_scan_flag.set()
+        if self.scan_thread and self.scan_thread.is_alive():
+            self.scan_thread.join()
 
     def create_widgets(self):
         notebook = ttk.Notebook(self.root)
         notebook.pack(expand=True, fill="both")
 
         scan_frame = ttk.Frame(notebook)
-        osint_frame = ttk.Frame(notebook)
-        remerdiation_frame = ttk.Frame(notebook)
-        
         notebook.add(scan_frame, text="Scan Réseau")
-        notebook.add(osint_frame, text="OSINT / Recherche")
-        notebook.add(remerdiation_frame, text="Remediation")
 
         scan_label = ttk.Label(
             scan_frame,
@@ -52,33 +55,14 @@ class CyberPulseApp:
         scan_button = ttk.Button(scan_frame, text="Scanner", command=self.start_scan_thread)
         scan_button.pack(padx=10, pady=10)
 
+        stop_button = ttk.Button(scan_frame, text="Arrêter", command=self.stop_scan)
+        stop_button.pack(padx=10, pady=10)
+
         self.progress = ttk.Progressbar(scan_frame, orient="horizontal", mode="determinate")
         self.progress.pack(padx=10, pady=10, fill="x")
 
         self.scan_results = tk.Text(scan_frame, wrap="word", height=10)
         self.scan_results.pack(padx=10, pady=10, fill="both", expand=True)
-
-        export_label = ttk.Label(scan_frame, text="Exporter les résultats:")
-        export_label.pack(padx=10, pady=10)
-
-        self.export_options = ttk.Combobox(scan_frame, values=["PDF"])
-        self.export_options.pack(padx=10, pady=10)
-        self.export_options.bind("<<ComboboxSelected>>", self.export_results)
-
-    def export_results(self, event):
-        option = self.export_options.get()
-        if option == "PDF":
-            self.export_to_pdf()
-
-    def export_to_pdf(self):
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-        results = self.scan_results.get("1.0", tk.END)
-        for line in results.split('\n'):
-            pdf.cell(200, 10, txt=line, ln=True)
-        pdf.output("scan_results.pdf")
-        print("Results exported to scan_results.pdf")
 
     def scan_network(self):
         network_info = self.network_scanner.get_network_info()
@@ -92,11 +76,14 @@ class CyberPulseApp:
         )
         self.scan_results.update()
 
-        devices = self.network_scanner.perform_network_scan(ip_range, selected_interface, self.progress, self.root)
+        devices = self.network_scanner.perform_network_scan(ip_range, selected_interface, self.progress, self.root, self.stop_scan_flag)
 
         if devices:
             self.scan_results.insert(tk.END, "Found devices:\n")
             for device in devices:
+                if self.stop_scan_flag.is_set():
+                    self.scan_results.insert(tk.END, "Scan stopped by user.\n")
+                    return
                 ip = device["ip"]
                 mac = device["mac"]
                 self.scan_results.insert(tk.END, f"IP: {ip}, MAC: {mac}\n")
