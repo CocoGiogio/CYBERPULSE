@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
-from scapy.all import ARP, Ether, srp, get_if_list, get_if_addr
-import ipaddress
-import socket
 import threading
 import psutil
+import socket
+import ipaddress
+from scapy.all import ARP, Ether, srp
 
 class CyberPulseApp:
     def __init__(self, root):
@@ -48,15 +48,6 @@ class CyberPulseApp:
         scan_label = ttk.Label(scan_frame, text="Cliquez sur le bouton pour scanner le réseau Wi-Fi:", wraplength=400, justify="left")
         scan_label.pack(padx=10, pady=10)
 
-        # Dropdown for network interfaces
-        self.interface_var = tk.StringVar()
-        interfaces = get_if_list()
-        self.interface_map = {iface: get_if_addr(iface) for iface in interfaces}
-        interface_names = [f"{iface} ({addr})" for iface, addr in self.interface_map.items()]
-        self.interface_var.set(interface_names[0])  # Set default value to the first interface
-        interface_dropdown = ttk.OptionMenu(scan_frame, self.interface_var, *interface_names)
-        interface_dropdown.pack(padx=10, pady=10)
-
         scan_button = ttk.Button(scan_frame, text="Scanner", command=self.start_scan_thread)
         scan_button.pack(padx=10, pady=10)
 
@@ -67,16 +58,31 @@ class CyberPulseApp:
         self.scan_results.pack(padx=10, pady=10, fill='both', expand=True)
 
     def scan_network(self):
-        selected_interface = self.interface_var.get().split(' ')[0]
-        interfaces = psutil.net_if_addrs().keys()
-        if selected_interface not in interfaces:
-            self.scan_results.insert(tk.END, f"Selected interface {selected_interface} not found.\n")
+        # Get the default gateway
+        gateways = psutil.net_if_addrs()
+        default_gateway = psutil.net_if_stats()
+        interface_address = None
+        selected_interface = None
+
+        # Get the default gateway interface
+        default_gateways = psutil.net_if_addrs()
+        for iface, addrs in default_gateways.items():
+            for addr in addrs:
+                if addr.family == psutil.AF_LINK:
+                    selected_interface = iface
+                    break
+            if selected_interface:
+                break
+
+        if not selected_interface:
+            self.scan_results.insert(tk.END, "Default route not found.\n")
             return
-        addrs = psutil.net_if_addrs()[selected_interface]
-        ip_info = next(addr for addr in addrs if addr.family == socket.AF_INET)
+
+        # Get the IP address and subnet mask of the selected interface
+        ip_info = next(addr for addr in psutil.net_if_addrs()[selected_interface] if addr.family == socket.AF_INET)
         ip_address = ip_info.address
         subnet_mask = ip_info.netmask
-        
+
         # Calculate the network range
         network = ipaddress.IPv4Network(f"{ip_address}/{subnet_mask}", strict=False)
         ip_range = str(network)
