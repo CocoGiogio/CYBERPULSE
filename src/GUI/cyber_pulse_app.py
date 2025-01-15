@@ -2,17 +2,23 @@
 import tkinter as tk
 from tkinter import ttk, PhotoImage
 import threading
-from cyber_sec.network_scanner import NetworkScanner
-from cyber_sec.port_scanner import PortScanner
+from src.cyber_sec.network_scanner import NetworkScanner
+from src.cyber_sec.port_scanner import PortScanner
 from fpdf import FPDF
 
-class CyberPulseApp:
-    def __init__(self, root): # Constructeur
-        self.root = root
-        self.network_scanner = NetworkScanner() # Creation de l'objet NetworkScanner
-        self.port_scanner = PortScanner() # Creation de l'objet PortScanner
 
-        self.root.title("CyberPulse")
+class CyberPulseApp:
+    def __init__(self, root):  # Constructor
+        self.root = root
+        self.network_scanner = NetworkScanner()
+        self.port_scanner = PortScanner()
+
+        # Set title and window properties
+        self.root.title("CyberPulse - Network Security Suite")
+        self.root.geometry("800x600")
+        self.root.configure(bg="#1f2933")  # Set background color
+
+        # Try setting an icon
         try:
             self.icon = PhotoImage(file="static/favicon-16x16.png")
             self.root.iconphoto(False, self.icon)
@@ -30,39 +36,69 @@ class CyberPulseApp:
         scan_thread.start()
 
     def create_widgets(self):
-        notebook = ttk.Notebook(self.root)
-        notebook.pack(expand=True, fill="both")
+        # Notebook (Tabs)
+        notebook_style = ttk.Style()
+        notebook_style.configure(
+            "TNotebook",
+            background="#1f2933",
+            foreground="#ffffff",
+            padding=10,
+        )
+        notebook_style.configure("TNotebook.Tab", font=("Helvetica", 12), padding=[10, 5])
 
-        scan_frame = ttk.Frame(notebook)
-        osint_frame = ttk.Frame(notebook)
-        remerdiation_frame = ttk.Frame(notebook)
-        
+        notebook = ttk.Notebook(self.root, style="TNotebook")
+        notebook.pack(expand=True, fill="both", padx=20, pady=20)
+
+        # Frames for tabs
+        scan_frame = ttk.Frame(notebook, style="TFrame")
+        osint_frame = ttk.Frame(notebook, style="TFrame")
+        remediation_frame = ttk.Frame(notebook, style="TFrame")
+
         notebook.add(scan_frame, text="Scan Réseau")
         notebook.add(osint_frame, text="OSINT / Recherche")
-        notebook.add(remerdiation_frame, text="Remediation")
+        notebook.add(remediation_frame, text="Remediation")
 
-        scan_label = ttk.Label(
-            scan_frame,
-            text="Cliquez sur le bouton pour scanner le réseau Wi-Fi:",
-            wraplength=400,
-            justify="left",
-        )
-        scan_label.pack(padx=10, pady=10)
+        # Scan Network Tab
+        self.build_scan_tab(scan_frame)
 
-        scan_button = ttk.Button(scan_frame, text="Scanner", command=self.start_scan_thread)
-        scan_button.pack(padx=10, pady=10)
+        # Placeholder for other tabs
+        osint_label = ttk.Label(osint_frame, text="OSINT Features Coming Soon!", font=("Helvetica", 14), background="#1f2933", foreground="#ffffff")
+        osint_label.pack(expand=True, pady=20)
 
-        self.progress = ttk.Progressbar(scan_frame, orient="horizontal", mode="determinate")
-        self.progress.pack(padx=10, pady=10, fill="x")
+        remediation_label = ttk.Label(remediation_frame, text="Remediation Features Coming Soon!", font=("Helvetica", 14), background="#1f2933", foreground="#ffffff")
+        remediation_label.pack(expand=True, pady=20)
 
-        self.scan_results = tk.Text(scan_frame, wrap="word", height=10)
-        self.scan_results.pack(padx=10, pady=10, fill="both", expand=True)
+    def build_scan_tab(self, scan_frame):
+        # Add styling
+        style = ttk.Style()
+        style.configure("TFrame", background="#1f2933")
+        style.configure("TLabel", background="#1f2933", foreground="#ffffff", font=("Helvetica", 12))
+        style.configure("TButton", background="#374151", foreground="#ffffff", font=("Helvetica", 12), padding=5)
 
-        export_label = ttk.Label(scan_frame, text="Exporter les résultats:")
-        export_label.pack(padx=10, pady=10)
+        scan_frame.configure(style="TFrame")
 
-        self.export_options = ttk.Combobox(scan_frame, values=["PDF"])
-        self.export_options.pack(padx=10, pady=10)
+        # Header
+        scan_label = ttk.Label(scan_frame, text="Scan your Wi-Fi network for devices and vulnerabilities:", style="TLabel")
+        scan_label.pack(anchor="w", padx=20, pady=(20, 10))
+
+        # Scan Button
+        scan_button = ttk.Button(scan_frame, text="Start Scan", command=self.start_scan_thread, style="TButton")
+        scan_button.pack(anchor="center", pady=10)
+
+        # Progress Bar
+        self.progress = ttk.Progressbar(scan_frame, orient="horizontal", mode="determinate", length=400)
+        self.progress.pack(anchor="center", pady=10)
+
+        # Results Text Box
+        self.scan_results = tk.Text(scan_frame, wrap="word", height=15, bg="#e5e7eb", fg="#000000", font=("Consolas", 10), relief="flat", highlightthickness=1, highlightbackground="#4b5563")
+        self.scan_results.pack(padx=20, pady=10, fill="both", expand=True)
+
+        # Export Section
+        export_label = ttk.Label(scan_frame, text="Export Results:", style="TLabel")
+        export_label.pack(anchor="w", padx=20, pady=(10, 5))
+
+        self.export_options = ttk.Combobox(scan_frame, values=["PDF"], state="readonly", font=("Helvetica", 12))
+        self.export_options.pack(anchor="w", padx=20, pady=5)
         self.export_options.bind("<<ComboboxSelected>>", self.export_results)
 
     def export_results(self, event):
@@ -74,8 +110,11 @@ class CyberPulseApp:
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", size=12)
-        results = self.scan_results.get("1.0", tk.END)
-        for line in results.split('\n'):
+        results = self.scan_results.get("1.0", tk.END).strip()
+        if not results:
+            print("No results to export.")
+            return
+        for line in results.split("\n"):
             pdf.cell(200, 10, txt=line, ln=True)
         pdf.output("scan_results.pdf")
         print("Results exported to scan_results.pdf")
