@@ -1,6 +1,6 @@
 # **Cyber Pulse**
 
-![Cyber Pulse Logo](/static/cyber_pulse_logo.jpg "Cyber Pulse Logo")
+![Cyber Pulse Logo](/static/cyber_pulse_logo.png "Cyber Pulse Logo")
 
 ## **Résumé**
 **Cyber Pulse** est une solution innovante visant à renforcer la sécurité des entreprises, tant sur le plan **cyber** qu'en matière de sécurité interne et externe. Grâce à une combinaison de technologies avancées, notamment une intelligence artificielle (IA) et des méthodologies OSINT (Open Source Intelligence), Cyber Pulse aide les entreprises à identifier, analyser et corriger leurs vulnérabilités.
