@@ -30,14 +30,39 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/about">About</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/security">Security</a>
+
+                    <!-- Security Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarSecurity" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Security
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarSecurity">
+                            <li><a class="dropdown-item" href="/net_scan">Network Scanner</a></li>
+                            <li><a class="dropdown-item" href="/port_scan">Port Scanner</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/osint">OSINT</a>
+
+                    <!-- OSINT Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarOSINT" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            OSINT
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarOSINT">
+                            <li><a class="dropdown-item" href="/username_search">Username Search</a></li>
+                            <li><a class="dropdown-item" href="/google_dorking">Google Dorking</a></li>
+
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/llm">LLM (A.I)</a>
+
+                    <!-- LLM (AI) Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarLLM" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            LLM (A.I)
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarLLM">
+                            <li><a class="dropdown-item" href="/chat_bot">Chatbot</a></li>
+                            <li><a class="dropdown-item" href="/remediation">Remediation</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
