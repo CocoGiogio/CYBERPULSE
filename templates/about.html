@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="about" class="centered-section">
+        <h2 class="section-title">À propos de Cyber Pulse</h2>
+        <p class="project-description">
+            Cyber Pulse est une solution innovante visant à renforcer la sécurité des entreprises, tant sur le plan cyber qu'en matière de sécurité interne et externe. Grâce à une combinaison de technologies avancées, notamment une intelligence artificielle (IA) et des méthodologies OSINT (Open Source Intelligence), Cyber Pulse aide les entreprises à identifier, analyser et corriger leurs vulnérabilités.
+        </p>
+
+        <h3 class="feature-title">Fonctionnalités clés</h3>
+        <div class="features">
+            <h4>Cybersécurité</h4>
+            <ul>
+                <li>Réalisation de tests Man-In-The-Middle éthiques pour écouter et analyser le trafic réseau.</li>
+                <li>Surveillance et analyse des différents types de trafic (HTTP, HTTPS, etc.).</li>
+                <li>Scan de ports pour détecter et analyser les appareils connectés au réseau.</li>
+                <li>Web scanning pour détecter des vulnérabilités comme les injections SQL ou XSS.</li>
+            </ul>
+
+            <h4>OSINT (Open Source Intelligence)</h4>
+            <ul>
+                <li>Web crawling pour explorer et analyser des sites web.</li>
+                <li>Énumération de répertoires et pages web pour trouver des ressources exposées.</li>
+                <li>Google dorking pour identifier des informations sensibles accessibles via les moteurs de recherche.</li>
+                <li>Recherche d’identifiants ou de noms d’utilisateurs associés à l’entreprise.</li>
+            </ul>
+
+            <h4>Intelligence Artificielle (IA)</h4>
+            <p>
+                Une IA intégrée analyse les rapports de scans réseau, les écoutes réseau, et autres données collectées. Elle fournit des recommandations détaillées pour aider les utilisateurs, même non experts, à corriger les vulnérabilités identifiées.
+            </p>
+        </div>
+
+        <h3 class="target-title">Cibles principales</h3>
+        <ul class="targets">
+            <li>PME (Petites et Moyennes Entreprises)</li>
+            <li>TPE (Très Petites Entreprises)</li>
+            <li>ITE (Institutions et TPE Équivalentes)</li>
+        </ul>
+    </section>
+{% endblock %}
