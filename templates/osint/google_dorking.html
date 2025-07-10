@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="net_scan" class="centered-section text-center">
+    <h2 class="section-title">Google Dorking</h2>
+    <p class="project-description">
+        Cette fonctionnalité permet d'effectuer des recherches en utilisant le Google Dorking via l'API de Sélenium.
+    </p>
+
+    <form class="d-flex justify-content-center align-items-center mt-4" method="POST" action="/osint/google_dorking">
+        <!-- Platform dropdown -->
+        <div class="me-2">
+            <select class="form-select" name="platform" required>
+                <option selected disabled value="">Select Platform</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+            </select>
+        </div>
+
+        <!-- Username input -->
+        <div class="me-2">
+            <input type="text" class="form-control" name="username" placeholder="Enter username" required>
+        </div>
+
+        <!-- Search button -->
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    {% if results %}
+    <section class="mt-5">
+        <h3>Search Results</h3>
+        <ul class="list-group">
+            {% for result in results %}
+            <li class="list-group-item">
+                <a href="{{ result.split(' - ')[1] }}" target="_blank">{{ result.split(' - ')[0] }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</section>
+{% endblock %}

@@ -2,3 +2,5 @@ scapy # for the packet manipulation
 flask # for the web interface
 psutil 
 fpdf
+google-search-results
+requests

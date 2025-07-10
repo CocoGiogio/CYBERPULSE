@@ -4,64 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber Pulse</title>
+
     <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body class="d-flex flex-column">
-    <!-- Canvas for the animation -->
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Canvas for animation -->
     <canvas id="canvas"></canvas>
 
     <!-- Navbar -->
     <header class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Open Innovation 2024 - 2026</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Home</a>
+                        <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/about">About</a>
+                        <a class="nav-link{% if request.path == '/about' %} active{% endif %}" href="/about">About</a>
                     </li>
 
                     <!-- Security Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarSecurity" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarSecurity" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
                             Security
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarSecurity">
-                            <li><a class="dropdown-item" href="/net_scan">Network Scanner</a></li>
-                            <li><a class="dropdown-item" href="/port_scan">Port Scanner</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('security.net_scan') }}">Network Scanner</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('security.port_scan') }}">Port Scanner</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('security.directory_enum') }}">Directory / Subdomain Enumerator</a></li>
                         </ul>
                     </li>
 
                     <!-- OSINT Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarOSINT" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarOSINT" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
                             OSINT
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarOSINT">
-                            <li><a class="dropdown-item" href="/username_search">Username Search</a></li>
-                            <li><a class="dropdown-item" href="/google_dorking">Google Dorking</a></li>
-
+                            <li><a class="dropdown-item" href="{{ url_for('osint.search') }}">Google Dorking</a></li>
                         </ul>
                     </li>
 
                     <!-- LLM (AI) Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarLLM" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarLLM" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
                             LLM (A.I)
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarLLM">
-                            <li><a class="dropdown-item" href="/chatbot">Chatbot</a></li>
-                            <li><a class="dropdown-item" href="/remediation">Remediation</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('llm.chatbot') }}">Chatbot</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('llm.remediation') }}">Remediation</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -76,12 +84,13 @@
     </main>
 
     <!-- Footer -->
-    <footer class="text-center mt-5 py-4 bg-dark text-light">
-        <p>&copy; 2025 Cyber Pulse. All rights reserved. Bommé Giovane, Janssoone Karl, Samuel Mc Calla</p>
+    <footer class="text-center mt-auto py-4 bg-dark text-light">
+        <p>&copy; 2025 Cyber Pulse. All rights reserved. <br> Bommé Giovane, Janssoone Karl, Samuel Mc Calla</p>
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
