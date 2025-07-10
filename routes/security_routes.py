@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request
 from modules.sec_mod.directory_enum import DirectoryEnumeration
 from modules.sec_mod.net_scan import NetworkScanner
-
+from modules.sec_mod.mitm import MITM
+from modules.sec_mod.sniffing import Sniffing
 import os
+import threading
 
 # Define BASE_DIR at the top
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,11 +27,41 @@ def net_scan():
 def port_scan():
     return render_template('security/port_scan.html')
 
+# keep instances global so you can fetch their logs
+current_mitm = None
+current_sniffer = None
 
 # Port Scanner
-@security_bp.route('/mitm_sniffing')
+@security_bp.route('/mitm_sniffing', methods=['GET', 'POST'])
 def mitm_sniffing():
-    return render_template('security/mitm_sniffing.html')
+    global current_mitm, current_sniffer
+
+    if request.method == 'POST':
+        if 'gatewayIP' in request.form:
+            # start MITM
+            gw = request.form['gatewayIP']
+            mitm = MITM(gw)
+            thread = threading.Thread(target=mitm.start, daemon=True)
+            thread.start()
+            current_mitm = mitm
+
+        elif 'interface' in request.form:
+            # start sniffing
+            iface = request.form['interface']
+            sniffer = Sniffing(iface)
+            thread = threading.Thread(target=sniffer.start_sniffing, daemon=True)
+            thread.start()
+            current_sniffer = sniffer
+
+    # on GET and after POST, render and show logs
+    mitm_logs = current_mitm.get_logs() if current_mitm else []
+    sniff_logs = current_sniffer.get_logs() if current_sniffer else []
+
+    return render_template('security/mitm_sniffing.html',
+                           mitm_logs=mitm_logs,
+                           sniff_logs=sniff_logs)
+
+
 
 # Directory Enumeration
 @security_bp.route('/directory_enum', methods=['GET', 'POST'])
