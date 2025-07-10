@@ -11,8 +11,10 @@
 ```
 git clone https://github.com/CocoGiogio/CYBERPULSE.git
 cd CYBERPUSLE/
+python3 -m venv my_venv
+source my_venv/bin/activate
 pip3 install -r requirements.txt
-python3 main.py
+python3 app.py
 ```
 
 ## **Fonctionnalités clés**
