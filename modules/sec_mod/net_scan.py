@@ -62,4 +62,4 @@ class NetworkScanner:
             return jsonify({"error": "Missing IP address"}), 400
         scanner = NetworkScanner(ip)
         devices = scanner.scan()
-        return jsonify(devices)
+        return jsonify(devices) 
