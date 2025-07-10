@@ -15,12 +15,14 @@ security_bp = Blueprint('security', __name__, url_prefix='/security')
 @security_bp.route('/net_scan', methods=['GET', 'POST'])
 def net_scan():
     results = None
+    interfaces = NetworkScanner.get_interfaces()  # récupère les interfaces réseau
+
     if request.method == 'POST':
         IP = request.form.get('IP')
         if IP:
             scanner = NetworkScanner(IP)
             results = scanner.scan()
-    return render_template('security/net_scan.html', results=results)
+    return render_template('security/net_scan.html', results=results, interfaces=interfaces)
 
 # Port Scanner
 @security_bp.route('/port_scan')

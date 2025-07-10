@@ -55,5 +55,10 @@ Les librairies utilisées pour ce projet sont:
 - `ipaddress`
 - `socket`
 
+## **Windows**
+- 'WinPcap'
+- 'NpCap'
+- 'Microsoft C++ Build Tools'
+
 ## **Sponsors**
 Actuellement, nous n'avons pas de sponsor. Nous travaillons avec des ressources limitées, mais notre motivation est sans faille ! 🙁

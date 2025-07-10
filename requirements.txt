@@ -5,3 +5,4 @@ fpdf
 google-search-results
 requests
 dotenv
+netifaces

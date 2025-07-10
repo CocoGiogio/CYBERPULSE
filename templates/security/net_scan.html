@@ -12,7 +12,12 @@
     <!-- Form -->
     <form method="POST" action="/security/net_scan" class="row justify-content-center g-2">
         <div class="col-md-4">
-            <input type="text" class="form-control" name="IP" placeholder="Ex: 192.168.1.0" required>
+            <select class="form-select" name="IP" required>
+                <option value="">-- Sélectionnez une interface --</option>
+                {% for iface in interfaces %}
+                <option value="{{ iface.ip }}">{{ iface.interface }} - {{ iface.ip }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">
