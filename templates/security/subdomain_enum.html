@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="directory_enum" class="centered-section text-center">
-    <h2 class="section-title">Directory Enumerator</h2>
+<section id="subdomain_enum" class="centered-section text-center">
+    <h2 class="section-title">Subdomain Enumerator</h2>
     <p class="project-description">
-        Cette fonctionnalité permet d'énumérer les répertoires d'un site web.
+        Cette fonctionnalité permet d'énumérer les sous-domaines d'un site web.
     </p>
 </section>
 
 <!-- Form Section -->
-<form class="d-flex justify-content-center align-items-center mt-4 flex-wrap gap-2" method="POST" action="/security/directory_enum">
+<form class="d-flex justify-content-center align-items-center mt-4 flex-wrap gap-2" method="POST" action="/security/subdomain_enum">
     <!-- Wordlist dropdown -->
     <div>
         <select class="form-select" name="Wordlists" required>
             <option selected disabled value="">Select Wordlist</option>
-            <option value="big.txt">Big</option>
+            <option value="subdomain1">Common</option>
         </select>
     </div>
 
@@ -30,7 +30,7 @@
 <!-- Progress Bar -->
 {% if started %}
 <div class="progress mt-5" style="height: 30px; max-width: 700px; margin: 0 auto;">
-  <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+  <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info"
        role="progressbar" style="width: 0%">0%</div>
 </div>
 
@@ -39,7 +39,7 @@
 
 <script>
 function updateProgress() {
-    fetch('/security/directory_enum_progress')
+    fetch('/security/subdomain_enum_progress')
         .then(response => response.json())
         .then(data => {
             const progress = data.progress;
@@ -75,7 +75,7 @@ updateProgress();
 <!-- Final Results -->
 {% if results %}
 <section class="mt-5">
-    <h3 class="text-center mb-4">🔍 Enumeration Results</h3>
+    <h3 class="text-center mb-4">🔎 Enumeration Results</h3>
     <div class="container">
         <div class="row justify-content-center">
             {% for result in results %}
