@@ -1,37 +1,56 @@
-#!/usr/bin/env python3
+# modules/sec_mod/packet_sniffer.py
 import scapy.all as scapy
 from scapy.layers import http
-from colorama import Fore, Back, Style
+import threading
 
-def sniff(interface):
-    scapy.sniff(iface=interface, store=False, prn=process_sniffed_packet) #Sniffing the packets with the sniff function (iface is the interface to sniff, store is to store the packets, prn is the call back function to process the packets)
+class Sniffing:
+    def __init__(self, interface):
+        self.interface = interface
+        self.sniffing = False
+        self.logs = []
+        self.keywords = self.load_keywords("modules/sec_mod/sniffing_wordlists/keywords.txt")
 
-# Function to load keywords from a file
-def load_keywords(file_path):
-    with open(file_path, 'r') as file:
-        keywords = [line.strip() for line in file.readlines()]
-    return keywords
+    def load_keywords(self, file_path):
+        try:
+            with open(file_path, 'r') as file:
+                return [line.strip() for line in file.readlines()]
+        except FileNotFoundError:
+            return []
 
-def get_url(packet):
-    return packet[http.HTTPRequest].Host.decode('utf-8', errors='ignore') + packet[http.HTTPRequest].Path.decode('utf-8', errors='ignore')
+    def get_url(self, packet):
+        try:
+            return packet[http.HTTPRequest].Host.decode() + packet[http.HTTPRequest].Path.decode()
+        except Exception:
+            return "Unknown URL"
 
-def get_info(packet):
-    if packet.haslayer(scapy.Raw): # Checking if the packet has a raw layer
-           load = packet[scapy.Raw].load.decode('utf-8', errors='ignore')  # Saving the inside the load var raw layer (.load is the raw data) (load is a subfield of the raw layer) + Decoding the load to string
-           keywords = load_keywords("keywords_lists/keywords.txt") # Loading the keywords from a file
-           for keyword in keywords: # Checking if the keyword is in the keywords list
-               if keyword in load: # Checking if the keyword is in the load var raw layer
-                   return load
+    def get_info(self, packet):
+        if packet.haslayer(scapy.Raw):
+            try:
+                load = packet[scapy.Raw].load.decode('utf-8', errors='ignore')
+                for keyword in self.keywords:
+                    if keyword in load:
+                        return load
+            except Exception:
+                pass
+        return None
 
-def process_sniffed_packet(packet):
-    if packet.haslayer(http.HTTPRequest):  # Checking if the packet is a HTTP Request
-        url = get_url(packet)  # Getting the URL
-        
-        print(Fore.YELLOW + f'HTTP URL: {url}')  # Printing the URL
-        info = get_info(packet)  # Getting the info
-        if info:  # Checking if the info is not empty
-            print(Fore.LIGHTGREEN_EX + f'[+] Info found! {info}\n')  # Printing the keyword found
+    def process_packet(self, packet):
+        if packet.haslayer(http.HTTPRequest):
+            url = self.get_url(packet)
+            self.logs.append(f"[HTTP] Visited URL: {url}")
+            info = self.get_info(packet)
+            if info:
+                self.logs.append(f"[+] Sensitive Info Found: {info}")
 
-network_interface = input("Enter the interface to sniff: ") # Getting the interface to sniff
-print(Fore.LIGHTMAGENTA_EX + f'[+] Sniffing on {network_interface}...\n')
-sniff(network_interface) # Sniffing the packets with the sniff function
+    def sniff_packets(self):
+        self.sniffing = True
+        scapy.sniff(iface=self.interface, store=False, prn=self.process_packet)
+
+    def start_sniffing(self):
+        thread = threading.Thread(target=self.sniff_packets)
+        thread.daemon = True
+        thread.start()
+
+    # ✅ Add this missing method
+    def get_logs(self):
+        return self.logs

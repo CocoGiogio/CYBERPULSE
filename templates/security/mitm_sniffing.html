@@ -1,27 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="mitm_attack" class="centered-section">
-    <h2 class="section-title">Man In the Middle Attack</h2>
-    <p>Enter the gateway IP address to start the MITM attack. All devices connected to this gateway will be automatically spoofed.</p>
-    <form id="mitmForm" method="POST" action="/start_mitm">
-        <label for="gatewayIP">Gateway IP:</label><br>
-        <input type="text" id="gatewayIP" name="gatewayIP" placeholder="e.g. 192.168.1.1" required><br><br>
+<section id="mitm_sniffing" class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title">💀 MITM & Sniffing</h2>
+        <p class="project-description">
+            Lancez une attaque Man-In-The-Middle et écoutez le trafic HTTP en temps réel sur votre réseau local.
+        </p>
+    </div>
 
-        <button type="submit">Start MITM Attack</button>
+    <!-- MITM Start Form -->
+    <form method="POST" class="row justify-content-center g-2">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="gatewayIP" placeholder="Ex: 192.168.1.1" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-danger">
+                Démarrer MITM
+            </button>
+        </div>
     </form>
-</section>
 
-<hr>
-
-<section id="packet_sniffing" class="centered-section">
-    <h2 class="section-title">Packet Sniffing</h2>
-    <p>Enter the network interface to start packet sniffing.</p>
-    <form id="sniffForm" method="POST" action="/start_sniffing">
-        <label for="interface">Network Interface:</label><br>
-        <input type="text" id="interface" name="interface" placeholder="e.g. eth0" required><br><br>
-
-        <button type="submit">Start Sniffing</button>
+    <!-- Sniffer Start Form -->
+    <form method="POST" class="row justify-content-center g-2 mt-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="interface" placeholder="Ex: eth0 ou wlan0" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-warning">
+                Démarrer Sniffing
+            </button>
+        </div>
     </form>
+
+    <!-- MITM Logs -->
+    {% if mitm_logs %}
+    <section class="mt-5">
+        <h4 class="mb-3">📡 MITM Logs</h4>
+        <div class="card shadow-sm border-0">
+            <div class="card-body bg-light">
+                <ul class="list-group list-group-flush">
+                    {% for line in mitm_logs %}
+                    <li class="list-group-item">
+                        <span class="text-primary fw-bold">»</span> {{ line }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Sniffing Logs -->
+    {% if sniff_logs %}
+    <section class="mt-5">
+        <h4 class="mb-3">🕵️ Sniffing Logs</h4>
+        <div class="card shadow-sm border-0">
+            <div class="card-body bg-light">
+                <ul class="list-group list-group-flush">
+                    {% for log in sniff_logs %}
+                    <li class="list-group-item">
+                        <span class="text-danger fw-bold">⚠</span> {{ log }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {% endif %}
 </section>
 {% endblock %}
