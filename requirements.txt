@@ -5,5 +5,3 @@ fpdf
 google-search-results
 requests
 dotenv
-socket
-requests

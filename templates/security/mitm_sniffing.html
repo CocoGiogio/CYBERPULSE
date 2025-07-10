@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="mitm_attack" class="centered-section">
+    <h2 class="section-title">Man In the Middle Attack</h2>
+    <p>Enter the gateway IP address to start the MITM attack. All devices connected to this gateway will be automatically spoofed.</p>
+    <form id="mitmForm" method="POST" action="/start_mitm">
+        <label for="gatewayIP">Gateway IP:</label><br>
+        <input type="text" id="gatewayIP" name="gatewayIP" placeholder="e.g. 192.168.1.1" required><br><br>
+
+        <button type="submit">Start MITM Attack</button>
+    </form>
+</section>
+
+<hr>
+
+<section id="packet_sniffing" class="centered-section">
+    <h2 class="section-title">Packet Sniffing</h2>
+    <p>Enter the network interface to start packet sniffing.</p>
+    <form id="sniffForm" method="POST" action="/start_sniffing">
+        <label for="interface">Network Interface:</label><br>
+        <input type="text" id="interface" name="interface" placeholder="e.g. eth0" required><br><br>
+
+        <button type="submit">Start Sniffing</button>
+    </form>
+</section>
+{% endblock %}

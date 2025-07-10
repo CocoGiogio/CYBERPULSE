@@ -25,6 +25,12 @@ def net_scan():
 def port_scan():
     return render_template('security/port_scan.html')
 
+
+# Port Scanner
+@security_bp.route('/mitm_sniffing')
+def mitm_sniffing():
+    return render_template('security/mitm_sniffing.html')
+
 # Directory Enumeration
 @security_bp.route('/directory_enum', methods=['GET', 'POST'])
 def directory_enum():
