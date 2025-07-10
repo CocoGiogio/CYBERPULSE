@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 llm_bp = Blueprint('llm', __name__, url_prefix='/llm')
 

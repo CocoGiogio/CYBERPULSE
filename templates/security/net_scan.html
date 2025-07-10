@@ -1,12 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="net_scan" class="centered-section">
-    <h2 class="section-title">Network Scanner</h2>
-    <p class="project-description">
-        Cette fonctionnalité permet d'effectuer un scan réseau en utilisant l'interface par défaut.
-    </p>
-</section>
+<section id="net_scan" class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title">🔍 Network Scanner</h2>
+        <p class="project-description">
+            Cette fonctionnalité permet d'effectuer un scan réseau en utilisant l'interface par défaut.
+        </p>
+    </div>
 
-    <!-- Autres sections ici -->
+    <!-- Form -->
+    <form method="POST" action="/security/net_scan" class="row justify-content-center g-2">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="IP" placeholder="Ex: 192.168.1.0" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                Lancer le scan
+            </button>
+        </div>
+    </form>
+
+    <!-- Scan Results -->
+    {% if results %}
+    <section class="mt-5">
+        <h4 class="mb-3">🖥️ Appareils détectés :</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Adresse IP</th>
+                        <th scope="col">Adresse MAC</th>
+                        <th scope="col">Fournisseur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in results %}
+                    <tr>
+                        <td>{{ device.IP }}</td>
+                        <td>{{ device.MAC }}</td>
+                        <td>{{ device.Vendor }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% endif %}
+</section>
 {% endblock %}

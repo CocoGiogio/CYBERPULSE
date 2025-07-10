@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="directory_enum" class="centered-section">
+    <h2 class="section-title">Directory Emumerator</h2>
+    <p class="project-description">
+        Cette fonctionnalité permet d'énumérer les répertoires d'un site web.
+    </p>
+</section>
+
+<form class="d-flex justify-content-center align-items-center mt-4" method="POST" action="/security/directory_enum">
+
+    <!-- Wordlist dropdown -->
+    <div class="me-2">
+        <select class="form-select" name="Wordlists" required>
+            <option selected disabled value="">Select Wordlist</option>
+            <option value="big.txt">Big</option>
+            <option value="common.txt">Common</option>
+        </select>
+    </div>
+
+    <!-- URL input -->
+    <div class="me-2">
+        <input type="text" class="form-control" name="url" placeholder="Enter URL" required>
+    </div>
+
+    <!-- Search button -->
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+{% if results %}
+<section class="mt-5">
+    <h3>Enumeration Results</h3>
+    <ul class="list-group">
+        {% for result in results %}
+        <li class="list-group-item">
+            <a href="{{ result.split(' - ')[1] }}" target="_blank">{{ result.split(' - ')[0] }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+</section>
+
+    <!-- Autres sections ici -->
+{% endblock %}
