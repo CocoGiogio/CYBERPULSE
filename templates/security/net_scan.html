@@ -35,6 +35,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">Adresse IP</th>
+                        <th scope="col">Nom d'hôte</th>
                         <th scope="col">Adresse MAC</th>
                         <th scope="col">Fournisseur</th>
                     </tr>
@@ -43,6 +44,7 @@
                     {% for device in results %}
                     <tr>
                         <td>{{ device.IP }}</td>
+                        <td>{{ device.Hostname}}</td>
                         <td>{{ device.MAC }}</td>
                         <td>{{ device.Vendor }}</td>
                     </tr>
