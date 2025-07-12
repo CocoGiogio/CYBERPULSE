@@ -14,6 +14,8 @@ import os
 import threading
 import time
 
+from modules.sec_mod.local_services_ports import scan_ports_with_services
+
 # Define BASE_DIR at the top
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -32,15 +34,28 @@ def net_scan():
             results = scanner.scan()
     return render_template('security/net_scan.html', results=results, interfaces=interfaces)
 
-# Port Scanner
-@security_bp.route('/port_scan')
-def port_scan():
-    return render_template('security/port_scan.html')
+# Port Scanner with Service Detection
+@security_bp.route('/local_services_ports', methods=['GET', 'POST'])
+def local_services_ports():
+    results = None
+    host = '127.0.0.1'
+    start_port = 1
+    end_port = 65535
+    timeout = 0.3
 
-# keep instances global so you can fetch their logs
-current_mitm = None
-current_sniffer = None
+    if request.method == 'POST':
+        host = request.form.get('host', '127.0.0.1')
+        start_port = int(request.form.get('start_port', 1))
+        end_port = int(request.form.get('end_port', 65535))
+        timeout = float(request.form.get('timeout', 0.3))
+        results = scan_ports_with_services(host, start_port, end_port, timeout)
 
+    return render_template('security/local_services_ports.html',
+                           results=results,
+                           host=host,
+                           start_port=start_port,
+                           end_port=end_port,
+                           timeout=timeout)
 # Port Scanner
 @security_bp.route('/mitm_sniffing', methods=['GET', 'POST'])
 def mitm_sniffing():

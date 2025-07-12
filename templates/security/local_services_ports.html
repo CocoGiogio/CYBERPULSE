@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="local_services_ports" class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title">🔍 Local Services & Port Scanner</h2>
+        <p class="project-description">
+            Scanne tous les ports TCP d’un hôte (Windows/Linux) pour détecter les services ouverts.
+        </p>
+    </div>
+
+    <!-- Formulaire de scan -->
+    <form method="POST" action="{{ url_for('security.local_services_ports') }}" class="row g-3 justify-content-center">
+        <div class="col-md-3">
+            <label for="host" class="form-label">Adresse IP / Nom d'hôte</label>
+            <input type="text" class="form-control" id="host" name="host" value="{{ host }}" required>
+        </div>
+        <div class="col-md-2">
+            <label for="start_port" class="form-label">Port début</label>
+            <input type="number" class="form-control" id="start_port" name="start_port" value="{{ start_port }}" min="1" max="65535" required>
+        </div>
+        <div class="col-md-2">
+            <label for="end_port" class="form-label">Port fin</label>
+            <input type="number" class="form-control" id="end_port" name="end_port" value="{{ end_port }}" min="1" max="65535" required>
+        </div>
+        <div class="col-md-2">
+            <label for="timeout" class="form-label">Timeout (s)</label>
+            <input type="number" step="0.1" class="form-control" id="timeout" name="timeout" value="{{ timeout }}" min="0.1" max="10">
+        </div>
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-primary">Lancer le scan</button>
+        </div>
+    </form>
+
+    <!-- Affichage des résultats -->
+    {% if results is not none %}
+    <section class="mt-5">
+        <h4 class="mb-3">🟢 Ports ouverts détectés sur {{ host }} :</h4>
+
+        {% if results|length > 0 %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Port</th>
+                        <th>Service</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                    <tr>
+                        <td>{{ item.port }}</td>
+                        <td>{{ item.service }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+<p class="text-white">⚠ Aucun port ouvert détecté sur cette plage.</p>
+        {% endif %}
+    </section>
+    {% endif %}
+</section>
+{% endblock %}
