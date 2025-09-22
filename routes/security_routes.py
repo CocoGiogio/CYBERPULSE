@@ -16,6 +16,11 @@ import time
 
 from modules.sec_mod.local_services_ports import scan_ports_with_services
 
+current_mitm = None
+current_sniffer = None
+directory_progress_data = {"progress": 0, "results": []}
+subdomain_progress_data = {"progress": 0, "results": []}
+
 # Define BASE_DIR at the top
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -56,10 +61,10 @@ def local_services_ports():
                            start_port=start_port,
                            end_port=end_port,
                            timeout=timeout)
-# Port Scanner
+# MITM
 @security_bp.route('/mitm_sniffing', methods=['GET', 'POST'])
 def mitm_sniffing():
-    global current_mitm, current_sniffer
+    global current_mitm, current_sniffer  # <- THIS IS REQUIRED
 
     if request.method == 'POST':
         if 'gatewayIP' in request.form:
@@ -68,7 +73,7 @@ def mitm_sniffing():
             mitm = MITM(gw)
             thread = threading.Thread(target=mitm.start, daemon=True)
             thread.start()
-            current_mitm = mitm
+            current_mitm = mitm  # assignment now works
 
         elif 'interface' in request.form:
             # start sniffing
@@ -76,7 +81,7 @@ def mitm_sniffing():
             sniffer = Sniffing(iface)
             thread = threading.Thread(target=sniffer.start_sniffing, daemon=True)
             thread.start()
-            current_sniffer = sniffer
+            current_sniffer = sniffer  # assignment now works
 
     # on GET and after POST, render and show logs
     mitm_logs = current_mitm.get_logs() if current_mitm else []
@@ -86,7 +91,7 @@ def mitm_sniffing():
                            mitm_logs=mitm_logs,
                            sniff_logs=sniff_logs)
 
-directory_progress_data = {"progress": 0, "results": []}
+
 
 @security_bp.route('/directory_enum', methods=['GET', 'POST'])
 def directory_enum():
@@ -126,7 +131,7 @@ def directory_enum_progress():
     return jsonify(progress=directory_progress_data["progress"], results=directory_progress_data["results"])
 
 
-subdomain_progress_data = {"progress": 0, "results": []}
+
 
 @security_bp.route('/subdomain_enum', methods=['GET', 'POST'])
 def subdomain_enum():
