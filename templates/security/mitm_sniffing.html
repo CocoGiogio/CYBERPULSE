@@ -1,47 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="mitm_sniffing" class="container mt-5">
+<section id="mitm_sniffing" class="container mt-5 text-white">
     <div class="text-center mb-4">
-        <h2 class="section-title">💀 MITM & Sniffing</h2>
-        <p class="project-description">
+        <h2 class="fw-bold mb-2">💀 MITM & Sniffing</h2>
+        <p class="fs-5 text-white">
             Lancez une attaque Man-In-The-Middle et écoutez le trafic HTTP en temps réel sur votre réseau local.
         </p>
     </div>
 
     <!-- MITM Start Form -->
-    <form method="POST" class="row justify-content-center g-2">
-        <div class="col-md-4">
-            <input type="text" class="form-control" name="gatewayIP" placeholder="Ex: 192.168.1.1" required>
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-danger">
-                Démarrer MITM
-            </button>
-        </div>
-    </form>
+    <div class="card bg-dark shadow-sm p-4 mb-4">
+        <form method="POST" class="row justify-content-center g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control bg-secondary text-white border-0" name="gatewayIP"
+                    placeholder="Ex: 192.168.1.1" required>
+            </div>
+            <div class="col-auto align-self-end">
+                <button type="submit" class="btn btn-danger btn-lg shadow-sm">Démarrer MITM</button>
+            </div>
+        </form>
+    </div>
 
     <!-- Sniffer Start Form -->
-    <form method="POST" class="row justify-content-center g-2 mt-3">
-        <div class="col-md-4">
-            <input type="text" class="form-control" name="interface" placeholder="Ex: eth0 ou wlan0" required>
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-warning">
-                Démarrer Sniffing
-            </button>
-        </div>
-    </form>
+    <div class="card bg-dark shadow-sm p-4 mb-4">
+        <form method="POST" class="row justify-content-center g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control bg-secondary text-white border-0" name="interface"
+                    placeholder="Ex: eth0 ou wlan0" required>
+            </div>
+            <div class="col-auto align-self-end">
+                <button type="submit" class="btn btn-warning btn-lg shadow-sm">Démarrer Sniffing</button>
+            </div>
+        </form>
+    </div>
 
     <!-- MITM Logs -->
     {% if mitm_logs %}
     <section class="mt-5">
-        <h4 class="mb-3">📡 MITM Logs</h4>
-        <div class="card shadow-sm border-0">
-            <div class="card-body bg-light">
+        <h4 class="mb-3 fw-bold">📡 MITM Logs</h4>
+        <div class="card shadow-sm border-0 bg-secondary text-white">
+            <div class="card-body">
                 <ul class="list-group list-group-flush">
                     {% for line in mitm_logs %}
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-secondary text-white border-0">
                         <span class="text-primary fw-bold">»</span> {{ line }}
                     </li>
                     {% endfor %}
@@ -54,12 +56,12 @@
     <!-- Sniffing Logs -->
     {% if sniff_logs %}
     <section class="mt-5">
-        <h4 class="mb-3">🕵️ Sniffing Logs</h4>
-        <div class="card shadow-sm border-0">
-            <div class="card-body bg-light">
+        <h4 class="mb-3 fw-bold">🕵️ Sniffing Logs</h4>
+        <div class="card shadow-sm border-0 bg-secondary text-white">
+            <div class="card-body">
                 <ul class="list-group list-group-flush">
                     {% for log in sniff_logs %}
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-secondary text-white border-0">
                         <span class="text-danger fw-bold">⚠</span> {{ log }}
                     </li>
                     {% endfor %}

@@ -1,56 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="net_scan" class="container mt-5">
+<section id="net_scan" class="container mt-5 text-white">
     <div class="text-center mb-4">
-        <h2 class="section-title">🔍 Network Scanner</h2>
-        <p class="project-description">
+        <h2 class="fw-bold mb-2">🔍 Network Scanner</h2>
+        <p class="fs-5 text-white">
             Cette fonctionnalité permet d'effectuer un scan réseau en utilisant l'interface par défaut.
         </p>
     </div>
 
-    <!-- Form -->
-    <form method="POST" action="/security/net_scan" class="row justify-content-center g-2">
-        <div class="col-md-4">
-            <select class="form-select" name="IP" required>
-                <option value="">-- Sélectionnez une interface --</option>
-                {% for iface in interfaces %}
-                <option value="{{ iface.ip }}">{{ iface.interface }} - {{ iface.ip }}</option>
-                {% endfor %}
-            </select>
+    <!-- Formulaire -->
+    <div class="card bg-dark shadow-sm mb-5">
+        <div class="card-body">
+            <form method="POST" action="/security/net_scan" class="row justify-content-center g-3">
+                <div class="col-md-4">
+                    <select class="form-select bg-secondary text-white border-0" name="IP" required>
+                        <option value="">-- Sélectionnez une interface --</option>
+                        {% for iface in interfaces %}
+                        <option value="{{ iface.ip }}">{{ iface.interface }} - {{ iface.ip }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto align-self-end">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">🚀 Lancer le scan</button>
+                </div>
+            </form>
         </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary">
-                Lancer le scan
-            </button>
-        </div>
-    </form>
+    </div>
 
-    <!-- Scan Results -->
+    <!-- Résultats du scan -->
     {% if results %}
-    <section class="mt-5">
-        <h4 class="mb-3">🖥️ Appareils détectés :</h4>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">Adresse IP</th>
-                        <th scope="col">Nom d'hôte</th>
-                        <th scope="col">Adresse MAC</th>
-                        <th scope="col">Fournisseur</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for device in results %}
-                    <tr>
-                        <td>{{ device.IP }}</td>
-                        <td>{{ device.Hostname}}</td>
-                        <td>{{ device.MAC }}</td>
-                        <td>{{ device.Vendor }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <section class="mt-4">
+        <h4 class="fw-bold mb-3 text-center">🖥️ Appareils détectés :</h4>
+        <div class="card bg-dark shadow-sm p-3">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle text-white">
+                    <thead class="table-dark text-white">
+                        <tr>
+                            <th scope="col">Adresse IP</th>
+                            <th scope="col">Nom d'hôte</th>
+                            <th scope="col">Adresse MAC</th>
+                            <th scope="col">Fournisseur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for device in results %}
+                        <tr>
+                            <td>{{ device.IP }}</td>
+                            <td>{{ device.Hostname }}</td>
+                            <td>{{ device.MAC }}</td>
+                            <td>{{ device.Vendor }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
     {% endif %}
